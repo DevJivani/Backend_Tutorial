@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import cookieparser from "cookie-parser"
-
 const app = express();
 
 app.use(cors({
@@ -21,6 +20,14 @@ app.use(express.static("public"))
 // cookieparser - server can access the cookies that stored in user browser and also server can do the crudoperation on the cookie
 
 app.use(cookieparser())
+
+
+// import router here
+
+import userRouter from "./routes/user.routes.js";
+
+// route declaration
+app.use("/api/v1/users",userRouter)
 
 
 
