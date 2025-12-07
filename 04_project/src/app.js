@@ -10,7 +10,7 @@ app.use(cors({
 
 // when data arrive in server from the frontend side so that data send by the url, json form,etc.. , if out of limit data send to the server so server can be crashed so we can add limit 
 
-app.use(express.json({limit:"16kb"}))
+app.use(express.json({limit:"16mb"}))
 app.use(express.urlencoded())
 
 // when any document like images,pdf,etc.. upload in server and if document stored in server side in public folder so we can do

@@ -18,14 +18,15 @@ const registerUser = asyncHandler(async (req,res)=>{
 
     // req.body contains user details from frontend
     const {username, email, password, fullName} = req.body;
-    // console.log(req.body);
+    console.log(req.body);
     // console.log(username);
+
 
     if ( [fullName, email, username, password].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required")
     }
 
-    const existingUser = User.findOne({
+    const existingUser = await User.findOne({
         $or: [{ username }, { email }]
     })
 
@@ -34,12 +35,24 @@ const registerUser = asyncHandler(async (req,res)=>{
     }
 
     // check for images in req.files , multer middleware will help to handle file upload and store in temp folder, take the path of that file 
+    
+    console.log("files ", req.files);
+
     const avatarLocalPath = req.files?.avatar[0]?.path
-    const coverImageLocalPath = req.files?.coverimage[0]?.path
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        console.log("Length:",req.files.coverImage.length);
+        
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
     }
+
+    
 
     // upload to cloudinary
 
@@ -79,10 +92,6 @@ const registerUser = asyncHandler(async (req,res)=>{
     res.status(201).json(
         new ApiResponse(200, createUser, "User registered successfully")
     )
-
-    
-    
-
 
 })
 
